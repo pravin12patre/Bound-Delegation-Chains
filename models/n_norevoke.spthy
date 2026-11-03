@@ -1,0 +1,212 @@
+theory BDC_norevoke
+begin
+
+builtins: signing, multiset
+
+rule Agent_key:
+  [ Fr(~k) ] --[ KeyGen($X) ]-> [ !Ltk($X, ~k), !Pk($X, pk(~k)), Out(pk(~k)) ]
+
+rule Reveal_agent:
+  [ !Ltk(X, k) ] --[ Compromised(X) ]-> [ Out(k) ]
+
+rule AS_key:
+  [ Fr(~kas) ] --[ OnlyOnceAS() ]-> [ !LtkAS(~kas), !PkAS(pk(~kas)), Out(pk(~kas)) ]
+
+// User U consents (out of band) to agent A1 acting with scope s; g identifies the grant.
+rule Consent:
+  [ Fr(~g), In(s) ] --[ Grant($U, $A1, s, ~g) ]-> [ !Consent($U, $A1, s, ~g) ]
+
+// User revokes a grant at the AS.
+rule Revoke:
+  [ !Consent(U, A1, s, g) ] --[ Revoke(g) ]-> [ ]
+
+rule AS_issue_root:
+  let m = <'T', U, A1, g, A1, 'as', s, pk1> in
+  [ !Consent(U, A1, s, g), !Pk(A1, pk1), !LtkAS(kas) ]
+  --[ Issue(U, A1, g, A1, 'as', s), Live(g) ]->
+  [ Out(<m, sign(m, kas)>) ]
+
+rule Agent_delegate_root_eq:
+  let m = <'T', U, A1, g, X, 'as', s, pk(k)>
+      x = <'XR', m, sig, An, R, s, ~nx> in
+  [ !Ltk(X, k), !PkAS(pkas), In(<m, sig>), In(<An, R>), Fr(~nx) ]
+  --[ Eq(verify(sig, m, pkas), true), Delegate(X, An, R, U, s, X) ]->
+  [ Out(<x, sign(x, k)>) ]
+
+rule Agent_delegate_root_sub:
+  let m = <'T', U, A1, g, X, 'as', s2 + rest, pk(k)>
+      x = <'XR', m, sig, An, R, s2, ~nx> in
+  [ !Ltk(X, k), !PkAS(pkas), In(<m, sig>), In(<An, R>), Fr(~nx) ]
+  --[ Eq(verify(sig, m, pkas), true), Delegate(X, An, R, U, s2, X) ]->
+  [ Out(<x, sign(x, k)>) ]
+
+rule Agent_delegate_deleg_eq:
+  let m = <'T', U, A1, g, <X, p>, 'as', s, pk(k)>
+      x = <'XR', m, sig, An, R, s, ~nx> in
+  [ !Ltk(X, k), !PkAS(pkas), In(<m, sig>), In(<An, R>), Fr(~nx) ]
+  --[ Eq(verify(sig, m, pkas), true), Delegate(X, An, R, U, s, <X, p>) ]->
+  [ Out(<x, sign(x, k)>) ]
+
+rule Agent_delegate_deleg_sub:
+  let m = <'T', U, A1, g, <X, p>, 'as', s2 + rest, pk(k)>
+      x = <'XR', m, sig, An, R, s2, ~nx> in
+  [ !Ltk(X, k), !PkAS(pkas), In(<m, sig>), In(<An, R>), Fr(~nx) ]
+  --[ Eq(verify(sig, m, pkas), true), Delegate(X, An, R, U, s2, <X, p>) ]->
+  [ Out(<x, sign(x, k)>) ]
+
+rule AS_exchange_root_eq:
+  let m  = <'T', U, A1, g, A1, 'as', s, pkh>
+      x  = <'XR', m, sig, An, R, s, nx>
+      m2 = <'T', U, A1, g, <An, A1>, R, s, pkn> in
+  [ !LtkAS(kas), !Pk(An, pkn), In(<x, sx>) ]
+  --[ Eq(verify(sig, m, pk(kas)), true), Eq(verify(sx, x, pkh), true),
+      Issue(U, A1, g, <An, A1>, R, s), Hop(U, A1, g, A1, An, R, s, A1) ]->
+  [ Out(<m2, sign(m2, kas)>) ]
+
+rule AS_exchange_root_sub:
+  let m  = <'T', U, A1, g, A1, 'as', s2 + rest, pkh>
+      x  = <'XR', m, sig, An, R, s2, nx>
+      m2 = <'T', U, A1, g, <An, A1>, R, s2, pkn> in
+  [ !LtkAS(kas), !Pk(An, pkn), In(<x, sx>) ]
+  --[ Eq(verify(sig, m, pk(kas)), true), Eq(verify(sx, x, pkh), true),
+      Issue(U, A1, g, <An, A1>, R, s2), Hop(U, A1, g, A1, An, R, s2, A1) ]->
+  [ Out(<m2, sign(m2, kas)>) ]
+
+rule AS_exchange_deleg_eq:
+  let m  = <'T', U, A1, g, <Ap, p>, 'as', s, pkh>
+      x  = <'XR', m, sig, An, R, s, nx>
+      m2 = <'T', U, A1, g, <An, <Ap, p>>, R, s, pkn> in
+  [ !LtkAS(kas), !Pk(An, pkn), In(<x, sx>) ]
+  --[ Eq(verify(sig, m, pk(kas)), true), Eq(verify(sx, x, pkh), true),
+      Issue(U, A1, g, <An, <Ap, p>>, R, s), Hop(U, A1, g, Ap, An, R, s, <Ap, p>) ]->
+  [ Out(<m2, sign(m2, kas)>) ]
+
+rule AS_exchange_deleg_sub:
+  let m  = <'T', U, A1, g, <Ap, p>, 'as', s2 + rest, pkh>
+      x  = <'XR', m, sig, An, R, s2, nx>
+      m2 = <'T', U, A1, g, <An, <Ap, p>>, R, s2, pkn> in
+  [ !LtkAS(kas), !Pk(An, pkn), In(<x, sx>) ]
+  --[ Eq(verify(sig, m, pk(kas)), true), Eq(verify(sx, x, pkh), true),
+      Issue(U, A1, g, <An, <Ap, p>>, R, s2), Hop(U, A1, g, Ap, An, R, s2, <Ap, p>) ]->
+  [ Out(<m2, sign(m2, kas)>) ]
+
+rule Agent_invoke_eq:
+  let m = <'T', U, A1, g, <X, p>, R, op, pk(k)>
+      q = <'REQ', m, op, R, ~n> in
+  [ !Ltk(X, k), !PkAS(pkas), In(<m, sig>), Fr(~n), In(op) ]
+  --[ Eq(verify(sig, m, pkas), true), Send(X, R, U, <X, p>, op, ~n) ]->
+  [ Out(<m, sig, op, ~n, sign(q, k)>) ]
+
+rule Agent_invoke_sub:
+  let m = <'T', U, A1, g, <X, p>, R, op + rest, pk(k)>
+      q = <'REQ', m, op, R, ~n> in
+  [ !Ltk(X, k), !PkAS(pkas), In(<m, sig>), Fr(~n), In(op) ]
+  --[ Eq(verify(sig, m, pkas), true), Send(X, R, U, <X, p>, op, ~n) ]->
+  [ Out(<m, sig, op, ~n, sign(q, k)>) ]
+
+rule R_accept_eq:
+  let m = <'T', U, A1, g, <Al, p>, $R, op, pkh> in
+  [ !PkAS(pkas), In(<m, sig, op, n, sr>) ]
+  --[ Eq(verify(sig, m, pkas), true), Eq(verify(sr, <'REQ', m, op, $R, n>, pkh), true), Accept($R, U, A1, g, <Al, p>, op, n), RNonce($R, n) ]->
+  [ ]
+
+rule R_accept_sub:
+  let m = <'T', U, A1, g, <Al, p>, $R, op + rest, pkh> in
+  [ !PkAS(pkas), In(<m, sig, op, n, sr>) ]
+  --[ Eq(verify(sig, m, pkas), true), Eq(verify(sr, <'REQ', m, op, $R, n>, pkh), true), Accept($R, U, A1, g, <Al, p>, op, n), RNonce($R, n) ]->
+  [ ]
+
+restriction Equality:
+  "All x y #i. Eq(x, y) @ #i ==> x = y"
+
+restriction SingleAS:
+  "All #i #j. OnlyOnceAS() @ #i & OnlyOnceAS() @ #j ==> #i = #j"
+
+restriction OneKeyPerAgent:
+  "All X #i #j. KeyGen(X) @ #i & KeyGen(X) @ #j ==> #i = #j"
+
+// The AS issues nothing for a grant after the user has revoked it.
+restriction RevokedGrant:
+  "All g #i #j. Live(g) @ #i & Revoke(g) @ #j ==> #i < #j"
+
+restriction ReplayCache:
+  "All R n #i #j. RNonce(R, n) @ #i & RNonce(R, n) @ #j ==> #i = #j"
+
+// Sanity: a chain of three distinct agents completes without any compromise.
+lemma executable:
+  exists-trace
+  "Ex R U A1 A2 A3 g op n #i #k. Accept(R, U, A1, g, <A3, <A2, A1>>, op, n) @ #i & Grant(U, A1, op, g) @ #k
+     & not (Ex X #c. Compromised(X) @ #c) & not (A1 = A2) & not (A2 = A3) & not (A1 = A3)"
+
+// Invariant (by induction): every token the AS issues carries a scope within the user's grant.
+lemma scope_invariant [use_induction, reuse]:
+  "All U A1 g ch aud s #i. Issue(U, A1, g, ch, aud, s) @ #i ==>
+     (Ex s0 #j. Grant(U, A1, s0, g) @ #j & #j < #i & ((s0 = s) | (Ex r. s0 = s + r)))"
+
+// P1 No escalation, for chains of any length and with every agent possibly compromised.
+lemma attenuation:
+  "All R U A1 g ch op n #i. Accept(R, U, A1, g, ch, op, n) @ #i ==>
+     (Ex s0 #j. Grant(U, A1, s0, g) @ #j & ((s0 = op) | (Ex r. s0 = op + r)))"
+
+// P2 Holder and audience binding: an accepted request from an honest final holder was sent by it, to R.
+lemma holder_and_audience:
+  "All R U A1 g Al p op n #i. Accept(R, U, A1, g, <Al, p>, op, n) @ #i
+     & not (Ex #c. Compromised(Al) @ #c) ==>
+     (Ex #j. Send(Al, R, U, <Al, p>, op, n) @ #j & #j < #i)"
+
+// P3a Every accepted chain was issued by the AS for this audience, with a scope covering op.
+lemma accepted_chain_issued:
+  "All R U A1 g ch op n #i. Accept(R, U, A1, g, ch, op, n) @ #i ==>
+     (Ex s #j. Issue(U, A1, g, ch, R, s) @ #j & #j < #i & ((s = op) | (Ex r. s = op + r)))"
+
+// P3b Prefix closure: every issued chain extends a chain the AS issued earlier for the same grant.
+lemma chain_prefix_issued:
+  "All U A1 g Ap An R s p #i. Hop(U, A1, g, Ap, An, R, s, p) @ #i ==>
+     (Ex aud s1 #j. Issue(U, A1, g, p, aud, s1) @ #j & #j < #i)"
+
+// P3d Purpose separation: every hop extends a delegation credential (a token whose audience is the AS);
+// a token issued for a resource can be used at that resource but never exchanged.
+lemma extends_delegation_credential:
+  "All U A1 g Ap An R s p #i. Hop(U, A1, g, Ap, An, R, s, p) @ #i ==>
+     (Ex s1 #j. Issue(U, A1, g, p, 'as', s1) @ #j & #j < #i)"
+
+// P3c Hop authenticity: each hop whose delegator is honest was requested by that delegator,
+// to that delegate, for that audience and scope.
+lemma hop_authentic:
+  "All U A1 g Ap An R s p #i. Hop(U, A1, g, Ap, An, R, s, p) @ #i
+     & not (Ex #c. Compromised(Ap) @ #c) ==>
+     (Ex #j. Delegate(Ap, An, R, U, s, p) @ #j & #j < #i)"
+
+// P4 No replay of an honest holder's request.
+lemma no_replay:
+  "All R U A1 g ch op n #i #k. Accept(R, U, A1, g, ch, op, n) @ #i & Accept(R, U, A1, g, ch, op, n) @ #k
+     ==> #i = #k"
+
+// P5 Revocation: anything accepted after a revocation used a token issued before it.
+lemma revocation:
+  "All R U A1 g ch op n #i #j. Accept(R, U, A1, g, ch, op, n) @ #i & Revoke(g) @ #j & #j < #i ==>
+     (Ex aud s #k. Issue(U, A1, g, ch, aud, s) @ #k & #k < #j)"
+
+// Attacker-strength variants
+lemma attenuation_honest_agents:
+  "All R U A1 g ch op n #i. Accept(R, U, A1, g, ch, op, n) @ #i & not (Ex X #c. Compromised(X) @ #c) ==>
+     (Ex s0 #j. Grant(U, A1, s0, g) @ #j & ((s0 = op) | (Ex r. s0 = op + r)))"
+
+lemma holder_and_audience_network_only:
+  "All R U A1 g Al p op n #i. Accept(R, U, A1, g, <Al, p>, op, n) @ #i
+     & not (Ex X #c. Compromised(X) @ #c) ==>
+     (Ex #j. Send(Al, R, U, <Al, p>, op, n) @ #j & #j < #i)"
+
+lemma hop_authentic_network_only:
+  "All U A1 g Ap An R s p #i. Hop(U, A1, g, Ap, An, R, s, p) @ #i
+     & not (Ex X #c. Compromised(X) @ #c) ==>
+     (Ex #j. Delegate(Ap, An, R, U, s, p) @ #j & #j < #i)"
+
+// Witness against P5: after the user revokes, the AS still issues a token that a resource accepts.
+lemma attack_after_revocation:
+  exists-trace
+  "Ex R U A1 A2 g s n #i #j #h #r. Issue(U, A1, g, A1, 'as', s) @ #r & Revoke(g) @ #j
+     & Hop(U, A1, g, A1, A2, R, s, A1) @ #h & #r < #j & #j < #h
+     & Accept(R, U, A1, g, <A2, A1>, s, n) @ #i & not (Ex X #c. Compromised(X) @ #c)"
+
+end

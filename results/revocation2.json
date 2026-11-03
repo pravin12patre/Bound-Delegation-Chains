@@ -1,0 +1,111 @@
+{
+ "push": {
+  "first_reject_ms": {
+   "median": 18.2293689999824,
+   "max": 24.72265400001561,
+   "n": 15
+  },
+  "max_accepted_after": 1
+ },
+ "missed_notice": {
+  "first_reject_ms": {
+   "median": 931.872624000107,
+   "max": 955.4961989997537,
+   "n": 8
+  },
+  "max_accepted_after": 93,
+  "hb_s": 1.0
+ },
+ "partition": {
+  "fail_closed_ms": {
+   "median": 2861.6501049998533,
+   "max": 2929.900693000036,
+   "n": 4
+  },
+  "recover_ms": {
+   "median": 53.88038850014709,
+   "max": 87.13342800001556,
+   "n": 4
+  },
+  "hmax_s": 3.0,
+  "trials": [
+   {
+    "fail_closed_ms": 2851.762163999865,
+    "recover_ms": 53.39975900005811,
+    "stale_rejections": 1
+   },
+   {
+    "fail_closed_ms": 2863.4994899998674,
+    "recover_ms": 54.36101800023607,
+    "stale_rejections": 2
+   },
+   {
+    "fail_closed_ms": 2929.900693000036,
+    "recover_ms": 87.13342800001556,
+    "stale_rejections": 3
+   },
+   {
+    "fail_closed_ms": 2859.800719999839,
+    "recover_ms": 38.238352999997005,
+    "stale_rejections": 4
+   }
+  ]
+ },
+ "messages": [
+  {
+   "test": "notice signed by another key",
+   "status": 403,
+   "reason": "signature",
+   "token_still_accepted": true,
+   "ok": true
+  },
+  {
+   "test": "genuine notice for another resource",
+   "status": 403,
+   "reason": "revocation message context",
+   "token_still_accepted": true,
+   "ok": true
+  },
+  {
+   "test": "notice naming another issuer",
+   "status": 403,
+   "reason": "revocation message context",
+   "token_still_accepted": true,
+   "ok": true
+  },
+  {
+   "test": "heartbeat presented as a notice",
+   "status": 403,
+   "reason": "revocation message context",
+   "token_still_accepted": true,
+   "ok": true
+  },
+  {
+   "test": "notice older than the skew window",
+   "status": 403,
+   "reason": "revocation message stale",
+   "token_still_accepted": true,
+   "ok": true
+  },
+  {
+   "test": "replayed genuine notice",
+   "status": 200,
+   "reason": "ignored",
+   "token_still_accepted": true,
+   "ok": true
+  }
+ ],
+ "restart": {
+  "revoked_rejected": true,
+  "live_accepted": true,
+  "new_replica_revoked_rejected": true,
+  "new_replica_live_accepted": true,
+  "new_replica_state": 26
+ },
+ "as_restart": {
+  "seq_before": 26,
+  "seq_after": 27,
+  "continued": true,
+  "revoked_rejected": true
+ }
+}

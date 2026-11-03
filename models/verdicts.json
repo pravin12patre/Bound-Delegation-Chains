@@ -1,0 +1,108 @@
+{
+ "columns": [
+  "P1",
+  "P1h",
+  "P2",
+  "P2n",
+  "P3a",
+  "P3b",
+  "P3c",
+  "P3cn",
+  "P4",
+  "P5"
+ ],
+ "rows": {
+  "full": [
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok"
+  ],
+  "nopop": [
+   "ok",
+   "ok",
+   "x",
+   "x",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok"
+  ],
+  "noaud": [
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "x",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok"
+  ],
+  "noxpop": [
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "x",
+   "x",
+   "ok",
+   "ok"
+  ],
+  "noatten": [
+   "x",
+   "comp",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok"
+  ],
+  "noreplay": [
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "xw",
+   "ok"
+  ],
+  "norevoke": [
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "ok",
+   "xw"
+  ]
+ },
+ "notes": {
+  "x": "falsified automatically",
+  "xw": "violated by an automatically found exists-trace witness",
+  "comp": "follows from scope_invariant_honest + accepted_chain_issued (both proved)",
+  "full_time_s": 83.2,
+  "noatten_time_s": 50.46,
+  "P3d": "extends_delegation_credential (purpose separation) is proved in every model"
+ }
+}

@@ -1,0 +1,68 @@
+{
+ "concurrent": {
+  "single server": {
+   "trials": 30,
+   "copies": 50,
+   "executed_total": 30,
+   "max_per_trial": 1,
+   "trials_with_more_than_one": 0
+  },
+  "round robin, per-replica caches": {
+   "trials": 30,
+   "copies": 50,
+   "executed_total": 60,
+   "max_per_trial": 2,
+   "trials_with_more_than_one": 30
+  },
+  "token affinity, per-replica caches": {
+   "trials": 30,
+   "copies": 50,
+   "executed_total": 30,
+   "max_per_trial": 1,
+   "trials_with_more_than_one": 0
+  },
+  "round robin, shared store": {
+   "trials": 30,
+   "copies": 50,
+   "executed_total": 30,
+   "max_per_trial": 1,
+   "trials_with_more_than_one": 0
+  }
+ },
+ "failover": {
+  "token affinity, per-replica caches": {
+   "trials": 5,
+   "replay_after_failover_accepted": 5
+  },
+  "round robin, shared store": {
+   "trials": 5,
+   "replay_after_failover_accepted": 0
+  }
+ },
+ "throughput_sweep": {
+  "none": {
+   "1": 410.8,
+   "2": 694.8,
+   "4": 696.0,
+   "8": 711.0,
+   "16": 725.6,
+   "32": 677.6
+  },
+  "bearer": {
+   "1": 312.8,
+   "2": 581.6,
+   "4": 629.8,
+   "8": 672.8,
+   "16": 696.6,
+   "32": 697.2
+  },
+  "bdc": {
+   "1": 359.0,
+   "2": 548.2,
+   "4": 600.8,
+   "8": 562.2,
+   "16": 624.4,
+   "32": 607.2
+  }
+ }
+}

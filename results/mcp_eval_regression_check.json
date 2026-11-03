@@ -1,0 +1,226 @@
+{
+ "env": {
+  "python": "3.13.18",
+  "cpus": 2,
+  "cpu": "x86_64"
+ },
+ "attacks": [
+  {
+   "test": "honest three-agent chain, in-scope tool",
+   "accepted": true,
+   "reason": "accept",
+   "expected": "accept",
+   "ok": true
+  },
+  {
+   "test": "tool outside the token scope",
+   "accepted": false,
+   "reason": {
+    "accept": 4,
+    "scope": 1
+   },
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "re-delegation requests a broader scope",
+   "accepted": false,
+   "reason": "escalation",
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "stolen token exchanged by another agent",
+   "accepted": false,
+   "reason": "signature",
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "stolen token presented with attacker key",
+   "accepted": false,
+   "reason": {
+    "signature": 2
+   },
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "resource token used as a delegation credential",
+   "accepted": false,
+   "reason": "not a delegation credential",
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "agent identity re-registered with another key",
+   "accepted": false,
+   "reason": "agent already registered",
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "token without proof of possession",
+   "accepted": false,
+   "reason": {
+    "no proof": 2
+   },
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "request body altered after signing",
+   "accepted": false,
+   "reason": {
+    "accept": 1,
+    "proof binding": 1
+   },
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "captured request replayed",
+   "accepted": false,
+   "reason": {
+    "replay": 1
+   },
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "token presented at another MCP server",
+   "accepted": false,
+   "reason": {
+    "audience": 2
+   },
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "actor chain edited in the token",
+   "accepted": false,
+   "reason": {
+    "signature": 2
+   },
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "exchange after the user revokes the grant",
+   "accepted": false,
+   "reason": "revoked",
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "already-issued token after revocation (until expiry)",
+   "accepted": true,
+   "reason": "accepted within TTL",
+   "expected": "accept",
+   "ok": true
+  },
+  {
+   "test": "[bearer] honest request",
+   "accepted": true,
+   "reason": "accept",
+   "expected": "accept",
+   "ok": true
+  },
+  {
+   "test": "[bearer] stolen token used by another party",
+   "accepted": true,
+   "reason": "no holder check",
+   "expected": "accept",
+   "ok": true
+  },
+  {
+   "test": "[bearer] token at another server",
+   "accepted": false,
+   "reason": "audience",
+   "expected": "reject",
+   "ok": true
+  }
+ ],
+ "latency": {
+  "exchange_http_ms": {
+   "median": 1.3111744999605435,
+   "p99": 2.9774380000162637
+  },
+  "none": {
+   "median": 2.3303450000184966,
+   "p99": 2.8631329998916044,
+   "n": 20,
+   "guard_median_us": null
+  },
+  "bearer": {
+   "median": 2.533448999997745,
+   "p99": 3.333238000095662,
+   "n": 20,
+   "guard_median_us": 191.7754999567478,
+   "token_bytes": 426
+  },
+  "bdc2": {
+   "median": 2.816390000134561,
+   "p99": 4.121543999872301,
+   "n": 20,
+   "guard_median_us": 349.175499991361,
+   "token_bytes": 438
+  },
+  "bdc3": {
+   "median": 2.7577859999610155,
+   "p99": 3.017809000084526,
+   "n": 20,
+   "guard_median_us": 346.11149987995304,
+   "token_bytes": 450
+  },
+  "bdc4": {
+   "median": 3.0989969999382083,
+   "p99": 4.013664000012795,
+   "n": 20,
+   "guard_median_us": 367.17749992476456,
+   "token_bytes": 462
+  },
+  "bdc5": {
+   "median": 2.948578999962592,
+   "p99": 3.970435999917754,
+   "n": 20,
+   "guard_median_us": 376.1899999972229,
+   "token_bytes": 474
+  },
+  "bdc6": {
+   "median": 2.788155000075676,
+   "p99": 4.2130490001,
+   "n": 20,
+   "guard_median_us": 348.22549991986307,
+   "token_bytes": 486
+  }
+ },
+ "throughput": {
+  "none": 505.375,
+  "bearer": 493.5,
+  "bdc": 392.375,
+  "concurrency": 8
+ },
+ "macaroons": {
+  "2": {
+   "bytes": 290,
+   "verify_median_us": 29.483000048458052
+  },
+  "3": {
+   "bytes": 368,
+   "verify_median_us": 38.4824999173361
+  },
+  "4": {
+   "bytes": 447,
+   "verify_median_us": 47.31249998712883
+  },
+  "5": {
+   "bytes": 526,
+   "verify_median_us": 61.95150001531147
+  },
+  "6": {
+   "bytes": 604,
+   "verify_median_us": 65.4415000553854
+  }
+ }
+}

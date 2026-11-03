@@ -1,0 +1,72 @@
+[
+ {
+  "tools": 1,
+  "entries": 1,
+  "token_bytes": 419,
+  "exchange_ms": 0.33307849980701576,
+  "check_ms": 0.26982550002685457
+ },
+ {
+  "tools": 1,
+  "entries": 4,
+  "token_bytes": 603,
+  "exchange_ms": 0.34320849999858183,
+  "check_ms": 0.2741784999216179
+ },
+ {
+  "tools": 10,
+  "entries": 10,
+  "token_bytes": 971,
+  "exchange_ms": 0.40350099993702315,
+  "check_ms": 0.27150450000590354
+ },
+ {
+  "tools": 10,
+  "entries": 40,
+  "token_bytes": 2811,
+  "exchange_ms": 0.48172499987231276,
+  "check_ms": 0.2906049999182869
+ },
+ {
+  "tools": 50,
+  "entries": 50,
+  "token_bytes": 3425,
+  "exchange_ms": 0.4863479998675757,
+  "check_ms": 0.30121500003588153
+ },
+ {
+  "tools": 50,
+  "entries": 200,
+  "token_bytes": 12625,
+  "exchange_ms": 1.0863709999284765,
+  "check_ms": 0.4000484998414322
+ },
+ {
+  "tools": 100,
+  "entries": 100,
+  "token_bytes": 6491,
+  "exchange_ms": 0.636269999858996,
+  "check_ms": 0.34293599992452073
+ },
+ {
+  "tools": 100,
+  "entries": 400,
+  "token_bytes": 24891,
+  "exchange_ms": 1.834845000075802,
+  "check_ms": 0.5205145000672928
+ },
+ {
+  "tools": 200,
+  "entries": 200,
+  "token_bytes": 12625,
+  "exchange_ms": 0.9681374999672698,
+  "check_ms": 0.40133050015356275
+ },
+ {
+  "tools": 200,
+  "entries": 800,
+  "token_bytes": 49425,
+  "exchange_ms": 3.3293204999154113,
+  "check_ms": 0.7612030001382664
+ }
+]

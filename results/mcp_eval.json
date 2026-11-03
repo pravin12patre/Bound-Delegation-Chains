@@ -1,0 +1,252 @@
+{
+ "env": {
+  "python": "3.13.18",
+  "cpus": 2,
+  "cpu": "x86_64"
+ },
+ "attacks": [
+  {
+   "test": "honest three-agent chain, in-scope tool",
+   "accepted": true,
+   "reason": "accept",
+   "expected": "accept",
+   "ok": true
+  },
+  {
+   "test": "tool outside the token scope",
+   "accepted": false,
+   "reason": {
+    "accept": 4,
+    "scope": 1
+   },
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "re-delegation requests a broader scope",
+   "accepted": false,
+   "reason": "escalation",
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "stolen token exchanged by another agent",
+   "accepted": false,
+   "reason": "signature",
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "stolen token presented with attacker key",
+   "accepted": false,
+   "reason": {
+    "signature": 2
+   },
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "token without proof of possession",
+   "accepted": false,
+   "reason": {
+    "no proof": 2
+   },
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "request body altered after signing",
+   "accepted": false,
+   "reason": {
+    "accept": 1,
+    "proof binding": 1
+   },
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "captured request replayed",
+   "accepted": false,
+   "reason": {
+    "replay": 1
+   },
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "token presented at another MCP server",
+   "accepted": false,
+   "reason": {
+    "audience": 2
+   },
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "actor chain edited in the token",
+   "accepted": false,
+   "reason": {
+    "signature": 2
+   },
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "exchange after the user revokes the grant",
+   "accepted": false,
+   "reason": "revoked",
+   "expected": "reject",
+   "ok": true
+  },
+  {
+   "test": "already-issued token after revocation (until expiry)",
+   "accepted": true,
+   "reason": "accepted within TTL",
+   "expected": "accept",
+   "ok": true
+  },
+  {
+   "test": "[bearer] honest request",
+   "accepted": true,
+   "reason": "accept",
+   "expected": "accept",
+   "ok": true
+  },
+  {
+   "test": "[bearer] stolen token used by another party",
+   "accepted": true,
+   "reason": "no holder check",
+   "expected": "accept",
+   "ok": true
+  },
+  {
+   "test": "[bearer] token at another server",
+   "accepted": false,
+   "reason": "audience",
+   "expected": "reject",
+   "ok": true
+  }
+ ],
+ "latency": {
+  "exchange_http_ms": {
+   "median": 1.187289000426972,
+   "p99": 1.7681029994491837
+  },
+  "none": {
+   "median": 2.553505999912886,
+   "p99": 5.121684999721765,
+   "n": 1500,
+   "guard_median_us": null
+  },
+  "bearer": {
+   "median": 3.393793499981257,
+   "p99": 7.250148999446537,
+   "n": 1500,
+   "guard_median_us": 251.7319999242318,
+   "token_bytes": 426
+  },
+  "bdc2": {
+   "median": 4.129265499614121,
+   "p99": 8.620374999736669,
+   "n": 1500,
+   "guard_median_us": 460.87749979051296,
+   "token_bytes": 438
+  },
+  "bdc3": {
+   "median": 4.130634499688313,
+   "p99": 9.315366000009817,
+   "n": 1500,
+   "guard_median_us": 427.5584997230908,
+   "token_bytes": 450
+  },
+  "bdc4": {
+   "median": 3.919348000181344,
+   "p99": 8.151879000251938,
+   "n": 1500,
+   "guard_median_us": 461.34699960020953,
+   "token_bytes": 462
+  },
+  "bdc5": {
+   "median": 4.442344499693718,
+   "p99": 9.283589000006032,
+   "n": 1500,
+   "guard_median_us": 514.7900001247763,
+   "token_bytes": 474
+  },
+  "bdc6": {
+   "median": 4.006571999980224,
+   "p99": 8.432933999756642,
+   "n": 1500,
+   "guard_median_us": 447.3649996725726,
+   "token_bytes": 486
+  }
+ },
+ "throughput": {
+  "none": 520.625,
+  "bearer": 578.875,
+  "bdc": 483.0,
+  "concurrency": 8
+ },
+ "macaroons": {
+  "2": {
+   "bytes": 290,
+   "verify_median_us": 34.83950013105641
+  },
+  "3": {
+   "bytes": 368,
+   "verify_median_us": 44.62100014279713
+  },
+  "4": {
+   "bytes": 447,
+   "verify_median_us": 56.102999678842025
+  },
+  "5": {
+   "bytes": 526,
+   "verify_median_us": 66.13349933104473
+  },
+  "6": {
+   "bytes": 604,
+   "verify_median_us": 80.56249953369843
+  }
+ },
+ "throughput_repeated": {
+  "none": {
+   "mean": 618.40625,
+   "sd": 4.878070614153373
+  },
+  "bearer": {
+   "mean": 597.4375,
+   "sd": 35.22376387705702
+  },
+  "bdc": {
+   "mean": 515.25,
+   "sd": 52.46040173311676
+  },
+  "runs": [
+   {
+    "none": 623.625,
+    "bearer": 612.625,
+    "bdc": 519.625,
+    "concurrency": 8
+   },
+   {
+    "none": 612.5,
+    "bearer": 551.5,
+    "bdc": 492.0,
+    "concurrency": 8
+   },
+   {
+    "none": 620.875,
+    "bearer": 591.5,
+    "bdc": 463.375,
+    "concurrency": 8
+   },
+   {
+    "none": 616.625,
+    "bearer": 634.125,
+    "bdc": 586.0,
+    "concurrency": 8
+   }
+  ]
+ }
+}

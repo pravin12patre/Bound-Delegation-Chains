@@ -1,0 +1,52 @@
+{
+ "BDC": {
+  "honest three-agent chain": true,
+  "delegator token exchanged by another agent (splicing)": false,
+  "root token exchanged by another agent (splicing)": false,
+  "delegated token used with attacker key": false,
+  "request body changed after the proof": false,
+  "re-delegation asks for a broader scope": false,
+  "token at another MCP server": false,
+  "tool outside the token scope": false,
+  "after revoking the user's authority: further delegation": false,
+  "after revoking the user's authority: downstream token": false
+ },
+ "OAuth TE+DPoP": {
+  "honest three-agent chain": true,
+  "delegator token exchanged by another agent (splicing)": true,
+  "  ... attacker then calls the tool with that token": true,
+  "root token exchanged by another agent (splicing)": true,
+  "delegated token used with attacker key": false,
+  "request body changed after the proof": true,
+  "re-delegation asks for a broader scope": false,
+  "token at another MCP server": false,
+  "tool outside the token scope": false,
+  "after revoking the user's authority: further delegation": true,
+  "after revoking the user's authority: downstream token": true
+ },
+ "OAuth TE+DPoP+may_act": {
+  "honest three-agent chain": true,
+  "delegator token exchanged by another agent (splicing)": true,
+  "  ... attacker then calls the tool with that token": true,
+  "root token exchanged by another agent (splicing)": false,
+  "delegated token used with attacker key": false,
+  "request body changed after the proof": true,
+  "re-delegation asks for a broader scope": false,
+  "token at another MCP server": false,
+  "tool outside the token scope": false,
+  "after revoking the user's authority: further delegation": true,
+  "after revoking the user's authority: downstream token": true
+ },
+ "OAuth TE+DPoP hardened": {
+  "honest three-agent chain": true,
+  "delegator token exchanged by another agent (splicing)": false,
+  "root token exchanged by another agent (splicing)": false,
+  "delegated token used with attacker key": false,
+  "request body changed after the proof": false,
+  "re-delegation asks for a broader scope": false,
+  "token at another MCP server": false,
+  "tool outside the token scope": false,
+  "after revoking the user's authority: further delegation": false,
+  "after revoking the user's authority: downstream token": true
+ }
+}
