@@ -6,7 +6,7 @@ This archive is the exact version used to produce every result in the paper *Bou
 |---|---|
 | Tables 2, 3, 5 (base model: lemmas incl. P3d and non-vacuity, ablations, run time and memory) | `models/` (`gen.py`, `n_*.spthy`, `proofs/`, `profile/`) |
 | Table 4, Section 5.5 (extended model: refinement, revocation notices) | `models/gen_ext.py`, `models/n_ext*.spthy`, `models/extended/` |
-| Appendix A (commands, versions), audit | `models/reproduce_proofs.sh`, `models/profile/prof.py`, `AUDIT.md`, `models/cleanroom_proofs.log` |
+| Supplemental material, Appendix A (commands, versions), audit | `models/reproduce_proofs.sh`, `models/profile/prof.py`, `AUDIT.md`, `models/cleanroom_proofs.log` |
 | Table 7 (end-to-end attacks), Table 8 (latency) | `mcp_eval/run_eval.py` → `results/mcp_eval.json`; rerun after the final code changes: `results/mcp_eval_regression_check.json` |
 | Section 7.3 (throughput) | sweep: `mcp_eval/replay2_eval.py` → `results/replay2.json`; steady state: `mcp_eval/steady.py` → `results/steady.json` |
 | Fig. 2 (token size with enterprise identifiers) | `mcp_eval/rev_eval.py` → `results/revision.json` → `sizes` |

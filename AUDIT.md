@@ -24,7 +24,7 @@ The archive was unpacked into an empty directory and a fresh Python virtual envi
 |---|---|---|
 | Base model, all lemmas, all ablations | Tables 2, 3 | same verdicts (see `models/cleanroom_proofs.log`) |
 | Extended model and its ablations | Table 4 | same verdicts |
-| Non-vacuity lemmas (new) | Appendix A | all proved |
+| Non-vacuity lemmas (new) | Supplemental material, Appendix A | all proved |
 | Property-based and edge-case tests | 46 tests | 46 passed |
 | End-to-end attack suite | Table 7 | 17 of 17 as expected |
 | OAuth comparison | Table 13 | same outcomes in every row |
